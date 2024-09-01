@@ -1,0 +1,33 @@
+.container {
+  margin: 50px 0;
+  text-align: center;
+}
+.container h1 {
+  color: #304ffe;
+  margin-bottom: 20px;
+}
+.container input {
+  width: 550px;
+  padding: 10px;
+  height: 30px;
+  border: 1px solid #304ffe;
+  border-radius: 5px;
+  color: #304ffe;
+}
+.button {
+  margin-right: 50px;
+  background-color: #304ffe;
+  color: #fff;
+  border-radius: 10%;
+  width: 30px;
+  border: 2px solid #304ffe;
+  box-shadow: #304ffe25 0px 7px 29px 0px;
+  position: absolute;
+  top: 135px;
+  /* left: 500px; */
+}
+.button:hover {
+  box-shadow: #0c2ad487 0px 7px 29px 0px;
+  transition: 0.2s all ease-in-out;
+  cursor: pointer;
+}
