@@ -1,11 +1,10 @@
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import ContactsList from "./ContactsList";
 import inputs from "../constants/inputs";
 import { v4 } from "uuid";
 import styles from "./Contacts.module.css";
 
-function Cotacts({ show, setShow, search }) {
+function Contacts({ show, setShow, search }) {
   const [contacts, setContacts] = useState(
     JSON.parse(localStorage.getItem("Contacts")) || []
   );
@@ -19,6 +18,7 @@ function Cotacts({ show, setShow, search }) {
   });
   const [message, setMessage] = useState("");
   const [contactsFilter, setContactsFilter] = useState([]);
+
   useEffect(() => {
     setContactsFilter(contacts);
     localStorage.setItem("Contacts", JSON.stringify(contacts));
@@ -27,23 +27,34 @@ function Cotacts({ show, setShow, search }) {
   useEffect(() => {
     if (search.length) {
       const result = contacts.filter(
-        (item) => item.name.includes(search) || item.email.includes(search)
+        (item) =>
+          item.name.toLowerCase().includes(search.toLowerCase()) ||
+          item.email.toLowerCase().includes(search.toLowerCase())
       );
       setContactsFilter(result);
     } else {
       setContactsFilter(contacts);
     }
-  }, [search]);
+  }, [search, contacts]);
+
   const changeHandler = (event) => {
-    const name = event.target.name;
-    const value = event.target.value;
+    const { name, value } = event.target;
     setContact((contact) => ({ ...contact, [name]: value }));
   };
+
   const addHandler = () => {
+    // console.log("error");
+
+    const namePattern = /^[a-zA-Z\u0600-\u06FF\s]+$/;
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
     if (
       !contact.name ||
+      !namePattern.test(contact.name) ||
       !contact.lastName ||
+      !namePattern.test(contact.lastName) ||
       !contact.email ||
+      !emailPattern.test(contact.email) ||
       !contact.phone
     ) {
       setAlert("Please enter valid data!");
@@ -51,8 +62,18 @@ function Cotacts({ show, setShow, search }) {
     }
 
     setAlert("");
-    const newContact = { ...contact, id: v4() };
-    setContacts((contacts) => [...contacts, newContact]);
+
+    if (contact.id) {
+      setContacts((contacts) =>
+        contacts.map((c) => (c.id === contact.id ? contact : c))
+      );
+      setMessage("Contact is Updated!");
+    } else {
+      const newContact = { ...contact, id: v4() };
+      setContacts((contacts) => [...contacts, newContact]);
+      setMessage("Contact is Added to your list");
+    }
+
     setContact({
       name: "",
       lastName: "",
@@ -60,20 +81,21 @@ function Cotacts({ show, setShow, search }) {
       phone: "",
     });
     setShow(false);
-    setMessage("Contact is Added to your list");
+
     setTimeout(() => {
       setMessage("");
-    }, 2000);
+    }, 1500);
   };
+
   const deleteHandler = (id) => {
-    const newContacts = contacts.filter((contact) => contact.id !== id);
-    setContacts(newContacts);
+    setContacts((contacts) => contacts.filter((contact) => contact.id !== id));
   };
+
   const editHandler = (id) => {
-    const result = contactsFilter.filter((name) => name.id === id);
-    setShow([true, result]);
+    const result = contactsFilter.find((contact) => contact.id === id);
+    setContact(result);
+    setShow(true);
   };
-  console.log(show);
 
   return (
     <div
@@ -92,7 +114,9 @@ function Cotacts({ show, setShow, search }) {
               onChange={changeHandler}
             />
           ))}
-          <button onClick={addHandler}>Add Contact</button>
+          <button onClick={addHandler}>
+            {contact.id ? "Update Contact" : "Add Contact"}
+          </button>
         </div>
       )}
       {message && <h1>{message}</h1>}
@@ -108,4 +132,4 @@ function Cotacts({ show, setShow, search }) {
   );
 }
 
-export default Cotacts;
+export default Contacts;

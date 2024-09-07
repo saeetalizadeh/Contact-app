@@ -3,9 +3,19 @@ function ContactItem({
   data: { id, name, lastName, email, phone },
   deleteHandler,
   editHandler,
+  selectedContacts,
+  onSelect,
+  showCheckboxes,
 }) {
   return (
     <li className={styles.item}>
+      {showCheckboxes && (
+        <input
+          type="checkbox"
+          checked={selectedContacts.includes(id)}
+          onChange={() => onSelect(id)}
+        />
+      )}
       <p>
         {name} {lastName}
       </p>

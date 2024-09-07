@@ -7,6 +7,7 @@ function Header({ show, setShow, search, setSearch }) {
   const showHandler = () => {
     setShow((i) => !i);
   };
+
   return (
     <>
       {!show && (
@@ -17,11 +18,12 @@ function Header({ show, setShow, search, setSearch }) {
             type="text"
             placeholder="Search here.."
             onChange={searchHandler}
+            value={search}
           />
         </div>
       )}
       <button className={styles.button} onClick={showHandler}>
-        {show ? "-" : "+"}
+        {show ? "Go to list" : "Add  new contact"}
       </button>
     </>
   );

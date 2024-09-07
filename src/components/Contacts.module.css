@@ -51,6 +51,10 @@
   padding: 10px;
   border-radius: 10px;
 }
+.container h1 {
+  color: #304ffe;
+  font-size: 35px;
+}
 @media (max-width: 500px) {
   .form input {
     width: 90%;
